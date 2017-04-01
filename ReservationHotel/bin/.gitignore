@@ -1,5 +1,5 @@
 /ReservationHotel/
-/application.properties
-/templates/
-/reservation/
-/META-INF/
+/domain/
+/main/
+/service/
+/web/

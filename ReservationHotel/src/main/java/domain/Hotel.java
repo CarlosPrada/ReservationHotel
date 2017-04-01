@@ -1,4 +1,4 @@
-package reservation.hotel.domain;
+package domain;
 
 import java.io.Serializable;
 import java.util.List;
@@ -7,12 +7,12 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "hotel")
 public class Hotel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -21,16 +21,13 @@ public class Hotel implements Serializable {
 		super();
 	}
 
-	public Hotel(Integer idHotel, String adresse, String ville, String pays, Integer nombreEtage, List<Client> clients,
-			List<Chambre> chambres) {
+	public Hotel(String adresse, String ville, String pays, Integer nombreEtage) {
 		super();
-		this.idHotel = idHotel;
+
 		this.adresse = adresse;
 		this.ville = ville;
 		this.pays = pays;
 		this.nombreEtage = nombreEtage;
-		this.clients = clients;
-		this.chambres = chambres;
 	}
 
 	private Integer idHotel;
@@ -42,6 +39,7 @@ public class Hotel implements Serializable {
 	private List<Chambre> chambres;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "IdHotel", unique = true, nullable = false)
 	public Integer getIdHotel() {
 		return idHotel;

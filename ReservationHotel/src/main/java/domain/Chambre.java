@@ -1,16 +1,19 @@
-package reservation.hotel.domain;
+package domain;
 
 import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 
 @Entity
 @Table(name = "chambre")
@@ -18,18 +21,14 @@ public class Chambre implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public Chambre(Integer idChambre, Integer numero, Integer etage,
-			String categorie, Double prix, Boolean disponibilite, Hotel hotel,
-			List<Reservation> reservation) {
+	public Chambre(Integer numero, Integer etage, String categorie, Double prix, Boolean disponibilite, Hotel hotel) {
 		super();
-		this.idChambre = idChambre;
 		this.numero = numero;
 		this.etage = etage;
 		this.categorie = categorie;
 		this.prix = prix;
 		this.disponibilite = disponibilite;
 		this.hotel = hotel;
-		this.reservation = reservation;
 	}
 
 	public Chambre() {
@@ -44,10 +43,11 @@ public class Chambre implements Serializable {
 	private Boolean disponibilite;
 
 	private Hotel hotel;
-	private List<Reservation> reservation;
+	private List<Reservation> reservations;
 
 	@Id
-	@Column(name = "idClient", unique = true, nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "idChambre", unique = true, nullable = false)
 	public Integer getIdChambre() {
 		return idChambre;
 	}
@@ -102,7 +102,7 @@ public class Chambre implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "hotel", referencedColumnName = "idHotel")
+	@JoinColumn(name = "idHotel", referencedColumnName = "idHotel")
 	public Hotel getHotel() {
 		return hotel;
 	}
@@ -112,12 +112,13 @@ public class Chambre implements Serializable {
 	}
 
 	@ManyToMany(mappedBy = "chambres")
-	public List<Reservation> getReservation() {
-		return reservation;
+
+	public List<Reservation> getReservations() {
+		return reservations;
 	}
 
-	public void setReservation(List<Reservation> reservation) {
-		this.reservation = reservation;
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
 	}
 
 }

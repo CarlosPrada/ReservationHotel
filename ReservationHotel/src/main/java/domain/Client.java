@@ -1,13 +1,15 @@
-package reservation.hotel.domain;
+package domain;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -20,12 +22,10 @@ public class Client implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public Client(Integer idClient, String nom, String prenom,
-			Date dateNaissance, String sexe, String adresse, String ville,
-			String telephone, String email, String pays, Hotel hotel,
-			List<Reservation> reservations) {
+	public Client(String nom, String prenom,
+			Timestamp dateNaissance, String sexe, String adresse, String ville,
+			String telephone, String email, String pays, Hotel hotel) {
 		super();
-		this.idClient = idClient;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.dateNaissance = dateNaissance;
@@ -36,7 +36,6 @@ public class Client implements Serializable {
 		this.email = email;
 		this.pays = pays;
 		this.hotel = hotel;
-		this.reservations = reservations;
 	}
 
 	public Client() {
@@ -46,7 +45,7 @@ public class Client implements Serializable {
 	private Integer idClient;
 	private String nom;
 	private String prenom;
-	private Date dateNaissance;
+	private Timestamp dateNaissance;
 	private String sexe;
 	private String adresse;
 	private String ville;
@@ -57,6 +56,7 @@ public class Client implements Serializable {
 	private List<Reservation> reservations;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idClient", unique = true, nullable = false)
 	public Integer getIdClient() {
 		return idClient;
@@ -85,11 +85,11 @@ public class Client implements Serializable {
 	}
 
 	@Column(name = "dateNaissance", nullable = false)
-	public Date getDateNaissance() {
+	public Timestamp getDateNaissance() {
 		return dateNaissance;
 	}
 
-	public void setDateNaissance(Date dateNaissance) {
+	public void setDateNaissance(Timestamp dateNaissance) {
 		this.dateNaissance = dateNaissance;
 	}
 
@@ -148,7 +148,7 @@ public class Client implements Serializable {
 	}
 
 	@ManyToOne(optional = false, targetEntity = Hotel.class)
-	@JoinColumn(name = "hotel", referencedColumnName = "idhotel")
+	@JoinColumn(name = "idhotel", referencedColumnName = "idhotel")
 	public Hotel getHotel() {
 		return hotel;
 	}

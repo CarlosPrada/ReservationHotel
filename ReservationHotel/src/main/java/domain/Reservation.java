@@ -1,14 +1,18 @@
-package reservation.hotel.domain;
+package domain;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -19,15 +23,12 @@ public class Reservation implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public Reservation(Integer idReservation, Date dateReservation,
-			Date dateArrive, Date dateSortie, List<Chambre> chambres,
-			Client client) {
+	public Reservation(Timestamp dateReservation, Timestamp dateArrive, Timestamp dateSortie, Client client) {
 		super();
-		this.idReservation = idReservation;
 		this.dateReservation = dateReservation;
 		this.dateArrive = dateArrive;
 		this.dateSortie = dateSortie;
-		this.chambres = chambres;
+		this.chambres = new ArrayList<Chambre>();
 		this.client = client;
 	}
 
@@ -36,13 +37,14 @@ public class Reservation implements Serializable {
 	}
 
 	private Integer idReservation;
-	private Date dateReservation;
-	private Date dateArrive;
-	private Date dateSortie;
+	private Timestamp dateReservation;
+	private Timestamp dateArrive;
+	private Timestamp dateSortie;
 	private List<Chambre> chambres;
 	private Client client;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idReservation", unique = true, nullable = false)
 	public Integer getIdReservation() {
 		return idReservation;
@@ -53,33 +55,35 @@ public class Reservation implements Serializable {
 	}
 
 	@Column(name = "dateReservation", nullable = false)
-	public Date getDateReservation() {
+	public Timestamp getDateReservation() {
 		return dateReservation;
 	}
 
-	public void setDateReservation(Date dateReservation) {
+	public void setDateReservation(Timestamp dateReservation) {
 		this.dateReservation = dateReservation;
 	}
 
 	@Column(name = "dateArrive", nullable = false)
-	public Date getDateArrive() {
+	public Timestamp getDateArrive() {
 		return dateArrive;
 	}
 
-	public void setDateArrive(Date dateArrive) {
+	public void setDateArrive(Timestamp dateArrive) {
 		this.dateArrive = dateArrive;
 	}
 
 	@Column(name = "dateSortie", nullable = false)
-	public Date getDateSortie() {
+	public Timestamp getDateSortie() {
 		return dateSortie;
 	}
 
-	public void setDateSortie(Date dateSortie) {
+	public void setDateSortie(Timestamp dateSortie) {
 		this.dateSortie = dateSortie;
 	}
 
-	@ManyToMany
+	@ManyToMany()
+	@JoinTable(name = "reservation_chambre", joinColumns = @JoinColumn(name = "idReservation", referencedColumnName = "idReservation"), inverseJoinColumns = @JoinColumn(name = "idChambre", referencedColumnName = "idChambre"))
+	//@JoinTable(name = "reservation_chambres", joinColumns = @JoinColumn(name = "idReservation", referencedColumnName = "idReservation"), inverseJoinColumns = @JoinColumn(name = "idChambre", referencedColumnName = "idChambre"))
 	public List<Chambre> getChambres() {
 		return chambres;
 	}
@@ -89,7 +93,7 @@ public class Reservation implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "client", referencedColumnName = "idClient")
+	@JoinColumn(name = "idClient", referencedColumnName = "idClient")
 	public Client getClient() {
 		return client;
 	}
